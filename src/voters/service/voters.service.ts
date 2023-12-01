@@ -4,13 +4,11 @@ import { UpdateVoterDto } from '../dto/update-voter.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Voter } from '../entities/voter.entity';
 import { Repository } from 'typeorm';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class VotersService {
   constructor(
-    @InjectRepository(Voter) private voterRepository: Repository<Voter>,
-    private jwtService: JwtService
+    @InjectRepository(Voter) private voterRepository: Repository<Voter>
   ) {}
 
   async create(body: CreateVoterDto) {
@@ -22,19 +20,10 @@ export class VotersService {
 
       await this.voterRepository.save(voter)
 
-      const payload = {
-        sub: voter.voterID,
-        fullName: voter.fullName,
-        role: voter.role
-      }
-
-      return {
-        accessToken: await this.jwtService.signAsync(payload)
-      };
+      return voter
 
     } catch (err) {
-      if(err.errno === 1062)
-        throw new ConflictException('nim already used')
+      return err.errno
     }
   }
 }

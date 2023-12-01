@@ -10,6 +10,21 @@ import * as bcrypt from "bcrypt";
 export class AdminService {
   constructor(@InjectRepository(Admin) private adminRepository: Repository<Admin>) {}
 
+  async findAdmin(nim: string) {
+    try {
+      const admin = await this.adminRepository.findOne({
+        where: {
+          nim: nim
+        }
+      })
+
+      return admin
+      
+    } catch (err) {
+      return err.message
+    }
+  }
+
   async create(body: CreateAdminDto) {
     try {
       const hasPassword = await bcrypt.hash(body.password, 10)
