@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { DatabaseModule } from './database/database.module';
 import { AdminModule } from './admin/admin.module';
 
@@ -7,5 +7,11 @@ import { AdminModule } from './admin/admin.module';
     DatabaseModule,
     AdminModule
   ],
+  providers: [
+    {
+      provide: 'APP_PIPE',
+      useClass: ValidationPipe
+    }
+  ]
 })
 export class AppModule {}

@@ -1,5 +1,6 @@
 import { Role } from "src/enum/role.enum";
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, PrimaryColumn } from "typeorm";
+import { v4 as uuidV4 } from 'uuid'
 
 @Entity()
 export class Admin {
@@ -20,4 +21,9 @@ export class Admin {
 
     @Column({ type: 'enum', enum: Role, default: Role.Admin })
     role: Role
+
+    @BeforeInsert()
+    generateUUID() {
+        this.adminID = uuidV4()
+    }
 }

@@ -1,26 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateAdminDto } from '../dto/create-admin.dto';
 import { UpdateAdminDto } from '../dto/update-admin.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Admin } from '../entities/admin.entity';
+import { Repository } from 'typeorm';
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AdminService {
-  create(createAdminDto: CreateAdminDto) {
-    return 'This action adds a new admin';
-  }
+  constructor(@InjectRepository(Admin) private adminRepository: Repository<Admin>) {}
 
-  findAll() {
-    return `This action returns all admin`;
-  }
+  async create(body: CreateAdminDto) {
+    try {
+      const hasPassword = await bcrypt.hash(body.password, 10)
 
-  findOne(id: number) {
-    return `This action returns a #${id} admin`;
-  }
+      const admin = this.adminRepository.create({
+        nim: body.nim,
+        fullName: body.fullName,
+        password: hasPassword
+      })
 
-  update(id: number, updateAdminDto: UpdateAdminDto) {
-    return `This action updates a #${id} admin`;
-  }
+      await this.adminRepository.save(admin);
 
-  remove(id: number) {
-    return `This action removes a #${id} admin`;
+      return admin
+
+    } catch (err) {
+      if(err.errno === 1062)
+        throw new ConflictException('nim already exists')
+    }
   }
 }
