@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Admin } from "src/admin/entities/admin.entity";
+import { Candidate } from "src/candidates/entities/candidate.entity";
 import { Voter } from "src/voters/entities/voter.entity";
 
 @Module({
@@ -16,7 +17,8 @@ import { Voter } from "src/voters/entities/voter.entity";
             database: process.env.DB_NAME,
             entities: [
                 Admin,
-                Voter
+                Voter,
+                Candidate
             ],
             // PENTING!!!! NYALAKAN SYNCHRONIZE HANYA DI PROSES DEVELOPMENT
             synchronize: true,

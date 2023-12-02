@@ -3,7 +3,7 @@ import { DatabaseModule } from './database/database.module';
 import { AdminModule } from './admin/admin.module';
 import { VotersModule } from './voters/voters.module';
 import { AuthModule } from './auth/auth.module';
-import { BemModule } from './bem/bem.module';
+import { CandidatesModule } from './candidates/candidates.module';
 
 @Module({
   imports: [
@@ -11,7 +11,7 @@ import { BemModule } from './bem/bem.module';
     AdminModule,
     VotersModule,
     AuthModule,
-    BemModule
+    CandidatesModule,
   ],
   providers: [
     {
