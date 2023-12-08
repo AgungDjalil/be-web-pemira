@@ -10,7 +10,7 @@ import { AdminService } from 'src/admin/service/admin.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Voter, Admin]),
+    TypeOrmModule.forFeature([Voter, Admin, Voter]),
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,

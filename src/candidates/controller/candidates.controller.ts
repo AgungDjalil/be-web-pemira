@@ -1,34 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, UploadedFile, UseInterceptors, Get } from '@nestjs/common';
 import { CandidatesService } from '../service/candidates.service';
 import { CreateCandidateDto } from '../dto/create-candidate.dto';
-import { UpdateCandidateDto } from '../dto/update-candidate.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
-@Controller('candidates')
+@Controller('api')
 export class CandidatesController {
   constructor(private readonly candidatesService: CandidatesService) {}
 
-  @Post()
-  create(@Body() createCandidateDto: CreateCandidateDto) {
-    return this.candidatesService.create(createCandidateDto);
+  @Get('candidate')
+  async findAllCandidate() {
+    const result = await this.candidatesService.findAll()
+    return result
   }
 
-  @Get()
-  findAll() {
-    return this.candidatesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.candidatesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCandidateDto: UpdateCandidateDto) {
-    return this.candidatesService.update(+id, updateCandidateDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.candidatesService.remove(+id);
+  @Post('candidate/create')
+  @UseInterceptors(FileInterceptor('file'))
+  async createCandidate(
+    @Body() createCandidateDto: CreateCandidateDto,
+    @UploadedFile() file: Express.Multer.File
+  ) {
+    const result = await this.candidatesService.createCandidate(createCandidateDto, file);
+    return result
   }
 }

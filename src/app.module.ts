@@ -4,6 +4,7 @@ import { AdminModule } from './admin/admin.module';
 import { VotersModule } from './voters/voters.module';
 import { AuthModule } from './auth/auth.module';
 import { CandidatesModule } from './candidates/candidates.module';
+import { PollingModule } from './polling/polling.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { CandidatesModule } from './candidates/candidates.module';
     VotersModule,
     AuthModule,
     CandidatesModule,
+    PollingModule,
   ],
   providers: [
     {

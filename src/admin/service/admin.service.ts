@@ -10,7 +10,7 @@ import * as bcrypt from "bcrypt";
 export class AdminService {
   constructor(@InjectRepository(Admin) private adminRepository: Repository<Admin>) {}
 
-  async findAdmin(nim: string) {
+  async findOneByNim(nim: string) {
     try {
       const admin = await this.adminRepository.findOne({
         where: {

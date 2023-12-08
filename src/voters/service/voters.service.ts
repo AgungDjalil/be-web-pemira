@@ -11,6 +11,21 @@ export class VotersService {
     @InjectRepository(Voter) private voterRepository: Repository<Voter>
   ) {}
 
+  async findOneByNim(nim: string) {
+    try {
+      const voter = await this.voterRepository.findOne({
+        where : {
+          nim : nim
+        }
+      })
+
+      return voter
+
+    } catch (err) {
+      return err.message
+    }
+  }
+
   async create(body: CreateVoterDto) {
     try {
       const voter = this.voterRepository.create({

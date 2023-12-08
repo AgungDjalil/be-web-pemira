@@ -1,18 +1,28 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Admin } from "src/admin/entities/admin.entity";
+import { LegislativeType } from "src/enum/legislativeType.enum";
+import { Polling } from "src/polling/entities/polling.entity";
+import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
+import { v4 as uuidV4 } from 'uuid'
 
 @Entity()
 export class Candidate {
     @PrimaryColumn({ type: 'uuid' })
     candidateID: string;
 
-    @Column({ type: 'blob' })
+    // relasi ke tabel admin
+    @ManyToOne(() => Admin, (admin) => admin.candidates)
+    @JoinColumn({ name: 'admin' })
+    admin: string;
+
+    // relasi ke tabel polling
+    @OneToMany(() => Polling, (polling) => polling.candidates)
+    polling: Polling[]
+
+    @Column({ type: 'enum', enum: LegislativeType })
+    legislativeType: LegislativeType
+
+    @Column({ type: 'longblob' })
     photo: Buffer
-
-    @Column({ type: 'varchar', length: 10, unique: true })
-    nim: string
-
-    @Column({ type: 'varchar' })
-    fullName: string
 
     @Column({ type: 'int' })
     serialNumber: number
@@ -25,4 +35,9 @@ export class Candidate {
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createAt: Date
+
+    @BeforeInsert()    
+    generateUUID() {
+        this.candidateID = uuidV4()
+    }
 }

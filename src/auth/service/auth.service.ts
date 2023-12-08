@@ -16,7 +16,7 @@ export class AuthService {
 
   async signInAdmin(body: LoginAdminDto) {
     try {
-      const admin = await this.adminService.findAdmin(body.nim)
+      const admin = await this.adminService.findOneByNim(body.nim)
 
       if(!admin)
         throw new NotFoundException('admin not found')
@@ -32,11 +32,12 @@ export class AuthService {
       }
 
       return {
-        accessToken: await this.jwtService.signAsync(payload)
+        accessToken: await this.jwtService.signAsync(payload),
+        role: admin.role
       }
 
     } catch (err) {
-      return err.message
+      throw err
     }
   }
 

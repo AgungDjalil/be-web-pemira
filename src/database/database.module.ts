@@ -3,6 +3,7 @@ import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Admin } from "src/admin/entities/admin.entity";
 import { Candidate } from "src/candidates/entities/candidate.entity";
+import { Polling } from "src/polling/entities/polling.entity";
 import { Voter } from "src/voters/entities/voter.entity";
 
 @Module({
@@ -18,7 +19,8 @@ import { Voter } from "src/voters/entities/voter.entity";
             entities: [
                 Admin,
                 Voter,
-                Candidate
+                Candidate,
+                Polling
             ],
             // PENTING!!!! NYALAKAN SYNCHRONIZE HANYA DI PROSES DEVELOPMENT
             synchronize: true,
