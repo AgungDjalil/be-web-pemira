@@ -54,11 +54,13 @@ export class AuthService {
       }
 
       return {
-        accessToken: await this.jwtService.signAsync(payload)
+        accessToken: await this.jwtService.signAsync(payload),
+        role: voter.role
       }
       
     } catch (err) {
-      return err
+      console.log(err)
+      throw err
     }
   }
 }

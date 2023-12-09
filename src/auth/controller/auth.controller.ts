@@ -21,6 +21,6 @@ export class AuthController {
   @Post('auth/login/vote')
   async signInForVote(@Body() body: CreateVoterDto) {
     const result = await this.authService.signInForVote(body);
-    return result.response ? result.response : result
+    return result
   }
 }

@@ -15,7 +15,7 @@ export class Candidate {
     admin: string;
 
     // relasi ke tabel polling
-    @OneToMany(() => Polling, (polling) => polling.candidates)
+    @OneToMany(() => Polling, (polling) => polling.candidateID)
     polling: Polling[]
 
     @Column({ type: 'enum', enum: LegislativeType })

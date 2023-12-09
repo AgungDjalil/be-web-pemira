@@ -3,12 +3,8 @@ import { IsNumber, IsString } from "class-validator";
 
 export class CreatePollingDto {
     @IsString()
-    candidate: string
+    candidateID: string
 
     @IsString()
-    voter: string
-
-    @Type(() => Number)
-    @IsNumber()
-    serialNumber: number   
+    voterNim: string
 }

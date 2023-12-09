@@ -7,6 +7,7 @@ import { Repository, UsingJoinColumnIsNotAllowedError } from 'typeorm';
 import { LegislativeType } from 'src/enum/legislativeType.enum';
 import { AdminService } from 'src/admin/service/admin.service';
 import { Multer } from 'multer';
+import { SearchCandidateDto } from '../dto/search-candidate.dto';
 
 @Injectable()
 export class CandidatesService {
@@ -15,9 +16,19 @@ export class CandidatesService {
     private adminService: AdminService
   ) {}
 
-  async findAll() {
-    const candidates = await this.candidateRepository.find()
-    return candidates
+  async findAll(query: SearchCandidateDto) {
+    try {
+      const candidates = await this.candidateRepository.find({
+        where: {
+          legislativeType: query.legislativeType
+        }
+      })
+
+      return candidates
+
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   async createCandidate(body: CreateCandidateDto, file: Express.Multer.File) {

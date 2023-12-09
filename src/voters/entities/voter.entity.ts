@@ -9,7 +9,7 @@ export class Voter {
     voterID: string
 
     // relasi ke tabel polling
-    @ManyToOne(() => Polling, (polling) => polling.voters)
+    @ManyToOne(() => Polling, (polling) => polling.voterID)
     polling: Polling
 
     @Column({ type: 'varchar', length: 10, unique: true})

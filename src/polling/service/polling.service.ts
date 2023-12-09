@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePollingDto } from '../dto/create-polling.dto';
 import { UpdatePollingDto } from '../dto/update-polling.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,54 +12,61 @@ import { LegislativeType } from 'src/enum/legislativeType.enum';
 export class PollingService {
   constructor(
     @InjectRepository(Polling) private pollingRepository: Repository<Polling>,
-    private candidateService: CandidatesService,
+    // private candidateService: CandidatesService,
     private voterService: VotersService
   ) {}
 
-  async createPollingForDpm(body: CreatePollingDto) {
-    try {
-      const candidate = await this.candidateService.findOneByIdDpm(body.candidate, body.serialNumber)
-      const voter = await this.voterService.findOneByNim(body.voter)
-
-      if(!candidate && !voter)
-        throw new NotFoundException('candidate or voter not found')
-
-      const polling = this.pollingRepository.create({
-        legislativeType: LegislativeType.Dpm,
-        candidates: candidate,
-        voters: voter
-      })
-
-      await this.pollingRepository.save(polling)
-
-      return polling
-
-    } catch (err) {
-      return err.message
-    }
-  }
-
   async createPollingForBem(body: CreatePollingDto) {
     try {
-      const candidate = await this.candidateService.findOneByIdBem(body.candidate, body.serialNumber)
-      const voter = await this.voterService.findOneByNim(body.voter)
+      // const candidate = await this.candidateService.findOneByIdBem(body.candidate, body.serialNumber)
+      const voter = await this.voterService.findOneByNim(body.voterNim)
 
-      if(!candidate && !voter)
-        throw new NotFoundException('candidate or voter cannot be found')
+      const existionPollingCount = await this.pollingRepository.count({
+        where: {
+          voterID: voter.voterID
+        }
+      })
 
+      if(existionPollingCount >= 1)
+        throw new BadRequestException('the number of polls cannot be more than 2')
+  
       const polling = this.pollingRepository.create({
         legislativeType: LegislativeType.Bem,
-        candidates: candidate,
-        voters: voter
+        voterID: voter.voterID,
+        candidateID: body.candidateID
       })
       
       await this.pollingRepository.save(polling)
+  
+      return true;
+  
+    } catch (err) {
+      throw err
+    }
+  }
 
-      return polling;
+  async createPollingForDpm(body: CreatePollingDto) {
+    try {
+      // const candidate = await this.candidateService.findOneByIdDpm(body.candidate, body.serialNumber)
+      // const voter = await this.voterService.findOneByNim(body.voter)
+
+      // if(!candidate && !voter)
+      //   throw new NotFoundException('candidate or voter not found')
+
+      // const polling = this.pollingRepository.create({
+      //   legislativeType: LegislativeType.Dpm,
+      //   candidates: body.candidate,
+      //   voters: voter
+      // })
+
+      // await this.pollingRepository.save(polling)
+
+      // return polling
 
     } catch (err) {
       return err.message
     }
   }
+
 }
 

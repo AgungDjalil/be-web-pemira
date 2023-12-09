@@ -1,15 +1,16 @@
-import { Controller, Post, Body, UploadedFile, UseInterceptors, Get } from '@nestjs/common';
+import { Controller, Post, Body, UploadedFile, UseInterceptors, Get, Query } from '@nestjs/common';
 import { CandidatesService } from '../service/candidates.service';
 import { CreateCandidateDto } from '../dto/create-candidate.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { SearchCandidateDto } from '../dto/search-candidate.dto';
 
 @Controller('api')
 export class CandidatesController {
   constructor(private readonly candidatesService: CandidatesService) {}
 
   @Get('candidate')
-  async findAllCandidate() {
-    const result = await this.candidatesService.findAll()
+  async findAllCandidate(@Query() query: SearchCandidateDto) {
+    const result = await this.candidatesService.findAll(query)
     return result
   }
 
