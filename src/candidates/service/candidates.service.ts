@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateCandidateDto } from '../dto/create-candidate.dto';
-import { UpdateCandidateDto } from '../dto/update-candidate.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Candidate } from '../entities/candidate.entity';
 import { Repository, UsingJoinColumnIsNotAllowedError } from 'typeorm';
@@ -35,8 +34,7 @@ export class CandidatesService {
     try {
       const admin = await this.adminService.findOneByNim(body.nimAdmin)
 
-      if(!admin)
-        throw new BadRequestException('only admin can create candidate')
+      if(!admin) throw new BadRequestException('only admin can create candidate')
 
       const candidate = this.candidateRepository.create({
         legislativeType: body.legislativeType,
@@ -44,7 +42,13 @@ export class CandidatesService {
         misi: body.misi,
         photo: file.buffer,
         admin: admin.adminID,
-        serialNumber: body.serialNumber
+        serialNumber: body.serialNumber,
+        namaWakil: body.namaWakil,
+        namaKetua: body.namaKetua,
+        namaCalon: body.namaCalon,
+        nimCalon: body.nimCalon,
+        nimKetua: body.nimKetua,
+        nimWakil: body.nimWakil,
       })
 
       await this.candidateRepository.save(candidate)
@@ -52,7 +56,7 @@ export class CandidatesService {
       return candidate;
 
     } catch (err) {
-      throw err.message
+      throw err
     }
   }
 

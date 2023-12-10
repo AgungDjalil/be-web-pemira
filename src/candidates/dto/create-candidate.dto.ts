@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsDefined, IsEnum, IsNumber, IsString } from "class-validator";
+import { IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
 import { LegislativeType } from "src/enum/legislativeType.enum";
 
 export class CreateCandidateDto {
@@ -18,4 +18,28 @@ export class CreateCandidateDto {
 
     @IsString()
     misi: string
+
+    @IsString()
+    @IsOptional()
+    namaKetua: string = ''
+
+    @IsString()
+    @IsOptional()
+    namaWakil: string = ''
+
+    @IsString()
+    @IsOptional()
+    nimKetua: string = ''
+
+    @IsString()
+    @IsOptional()
+    nimWakil: string = ''
+
+    @IsString()
+    @IsOptional()
+    namaCalon: string = ''
+
+    @IsString()
+    @IsOptional()
+    nimCalon: string = ''
 }

@@ -24,13 +24,31 @@ export class Candidate {
     @Column({ type: 'longblob' })
     photo: Buffer
 
+    @Column({ type: 'varchar', nullable: true })
+    namaKetua: string
+
+    @Column({ type: 'varchar', nullable: true })
+    namaWakil: string
+
+    @Column({ type: 'varchar', nullable: true })
+    namaCalon: string
+
+    @Column({ type: 'varchar', nullable: true })
+    nimKetua: string
+
+    @Column({ type: 'varchar', nullable: true })
+    nimWakil: string
+
+    @Column({ type: 'varchar', nullable: true })
+    nimCalon: string
+
     @Column({ type: 'int' })
     serialNumber: number
 
-    @Column({ type: 'varchar', length: 500})
+    @Column({ type: 'varchar', length: 1500})
     visi: string
 
-    @Column({ type: 'varchar', length: 500 })
+    @Column({ type: 'varchar', length: 1500 })
     misi: string
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

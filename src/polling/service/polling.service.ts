@@ -1,10 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePollingDto } from '../dto/create-polling.dto';
-import { UpdatePollingDto } from '../dto/update-polling.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Polling } from '../entities/polling.entity';
 import { Repository } from 'typeorm';
-import { CandidatesService } from 'src/candidates/service/candidates.service';
 import { VotersService } from 'src/voters/service/voters.service';
 import { LegislativeType } from 'src/enum/legislativeType.enum';
 
@@ -12,13 +10,11 @@ import { LegislativeType } from 'src/enum/legislativeType.enum';
 export class PollingService {
   constructor(
     @InjectRepository(Polling) private pollingRepository: Repository<Polling>,
-    // private candidateService: CandidatesService,
     private voterService: VotersService
   ) {}
 
   async createPollingForBem(body: CreatePollingDto) {
     try {
-      // const candidate = await this.candidateService.findOneByIdBem(body.candidate, body.serialNumber)
       const voter = await this.voterService.findOneByNim(body.voterNim)
 
       const existionPollingCount = await this.pollingRepository.count({
@@ -27,8 +23,7 @@ export class PollingService {
         }
       })
 
-      if(existionPollingCount >= 1)
-        throw new BadRequestException('the number of polls cannot be more than 2')
+      if(existionPollingCount === 2) throw new BadRequestException('the number of polls cannot be more than 2')
   
       const polling = this.pollingRepository.create({
         legislativeType: LegislativeType.Bem,
@@ -47,24 +42,28 @@ export class PollingService {
 
   async createPollingForDpm(body: CreatePollingDto) {
     try {
-      // const candidate = await this.candidateService.findOneByIdDpm(body.candidate, body.serialNumber)
-      // const voter = await this.voterService.findOneByNim(body.voter)
+      const voter = await this.voterService.findOneByNim(body.voterNim)
 
-      // if(!candidate && !voter)
-      //   throw new NotFoundException('candidate or voter not found')
+      const existionPollingCount = await this.pollingRepository.count({
+        where: {
+          voterID: voter.voterID
+        }
+      })
+      
+      if(existionPollingCount === 2) throw new BadRequestException('the number of polls cannot be more than 2')
 
-      // const polling = this.pollingRepository.create({
-      //   legislativeType: LegislativeType.Dpm,
-      //   candidates: body.candidate,
-      //   voters: voter
-      // })
+      const polling = this.pollingRepository.create({
+        legislativeType: LegislativeType.Dpm,
+        voterID: voter.voterID,
+        candidateID: body.candidateID
+      })
 
-      // await this.pollingRepository.save(polling)
+      await this.pollingRepository.save(polling)
 
-      // return polling
+      return polling
 
     } catch (err) {
-      return err.message
+      throw err
     }
   }
 
