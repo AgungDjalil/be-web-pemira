@@ -23,7 +23,7 @@ import { Voter } from "src/voters/entities/voter.entity";
                 Polling
             ],
             // PENTING!!!! NYALAKAN SYNCHRONIZE HANYA DI PROSES DEVELOPMENT
-            synchronize: true,
+            // synchronize: true,
         }),
     ]
 })

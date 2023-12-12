@@ -2,11 +2,11 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateCandidateDto } from '../dto/create-candidate.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Candidate } from '../entities/candidate.entity';
-import { Repository, UsingJoinColumnIsNotAllowedError } from 'typeorm';
+import { Repository } from 'typeorm';
 import { LegislativeType } from 'src/enum/legislativeType.enum';
 import { AdminService } from 'src/admin/service/admin.service';
-import { Multer } from 'multer';
 import { SearchCandidateDto } from '../dto/search-candidate.dto';
+import { UpdateCandidateDto } from '../dto/update-candidate.dto';
 
 @Injectable()
 export class CandidatesService {
@@ -14,6 +14,48 @@ export class CandidatesService {
     @InjectRepository(Candidate) private candidateRepository: Repository<Candidate>,
     private adminService: AdminService
   ) {}
+
+  async finOneByID(candidateID: string) {
+    try {
+      const candidate = await this.candidateRepository.findOne({
+        where: {
+          candidateID: candidateID
+        }
+      })
+
+      return candidate
+    } catch (err) {
+      throw err
+    }
+  }
+
+  async updateCandidate(body: UpdateCandidateDto, file: Express.Multer.File) {
+    try {
+      const candidate = await this.candidateRepository.findOne({
+        where: {
+          candidateID: body.candidateID,
+          legislativeType: body.legislativeType
+        }
+      })
+  
+      candidate.misi = body.misi
+      candidate.visi = body.visi
+      candidate.namaCalon = body.namaCalon
+      candidate.namaKetua = body.namaKetua
+      candidate.namaWakil = body.namaWakil
+      candidate.nimKetua = body.nimKetua
+      candidate.nimWakil = body.nimWakil
+      candidate.nimCalon = body.nimCalon
+      candidate.photo = file.buffer
+  
+      await this.candidateRepository.save(candidate)
+  
+      return candidate
+
+    } catch (err) {
+      throw err
+    }
+  }
 
   async findAll(query: SearchCandidateDto) {
     try {
