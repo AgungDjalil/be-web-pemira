@@ -4,18 +4,17 @@ import { PollingController } from './controller/polling.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Polling } from './entities/polling.entity';
 import { VotersService } from 'src/voters/service/voters.service';
-import { Candidate } from 'src/candidates/entities/candidate.entity';
 import { Voter } from 'src/voters/entities/voter.entity';
-import { Admin } from 'src/admin/entities/admin.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Polling, Voter, Admin, Candidate])
+    TypeOrmModule.forFeature([Polling, Voter])
   ],
   controllers: [PollingController],
   providers: [
     PollingService,
-    VotersService
+    VotersService,
   ],
+  exports: [PollingService]
 })
 export class PollingModule {}

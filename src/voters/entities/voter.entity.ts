@@ -24,6 +24,9 @@ export class Voter {
     @Column({ type: 'enum', enum: Role, default: Role.Voter })
     role: Role
 
+    @Column({ type: 'boolean', default: false })
+    isVerified: boolean
+
     @BeforeInsert()
     generateUUID() {
         this.voterID = uuidV4()
